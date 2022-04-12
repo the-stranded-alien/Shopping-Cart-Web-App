@@ -49,6 +49,26 @@ public class Product implements Serializable {
         return quantityAvailable;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public void setUnitPrice(Double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public void setSalesTaxRate(Double salesTaxRate) {
+        this.salesTaxRate = salesTaxRate;
+    }
+
+    public void setQuantityAvailable(Integer quantityAvailable) {
+        this.quantityAvailable = quantityAvailable;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
