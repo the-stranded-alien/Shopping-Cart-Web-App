@@ -36,6 +36,13 @@ public class ProductController {
         return "redirect:/product";
     }
 
+    @GetMapping("/update/{id}")
+    public String updateProduct(@PathVariable(value="id") Long id, Model model) {
+        Product product = this.productService.getProductById(id);
+        model.addAttribute("product", product);
+        return "product/updateProduct";
+    }
+
     @PostMapping("/update")
     public String updateProduct(@ModelAttribute("product") Product product) {
         Product updatedProduct = this.productService.updateProduct(product);
