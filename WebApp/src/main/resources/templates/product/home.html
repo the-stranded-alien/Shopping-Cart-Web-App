@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="ISO-8859-1">
+    <title> Products </title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                <span class="sr-only">Toggle Navigation</span> <span
+                    class="icon-bar"></span> <span class="icon-bar"></span> <span
+                    class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/}"> Products </a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{/}"> Home </a></li>
+                <li><a th:href="@{/product}"> Product </a></li>
+                <li><a th:href="@{/cart}"> My Cart </a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container my-2">
+    <br><br><br>
+    <h2> Available Products </h2>
+    <br>
+    <a th:href="@{/product/add}" class="btn btn-primary btn-lg mb-3"> Add A New Product </a>
+    <br><br>
+    <table border="1" class = "table table-striped table-responsive-md">
+        <thead>
+        <tr>
+            <th class="col-xs-3 text-center">
+                Product Name
+            </th>
+            <th class="col-xs-1 text-center">
+                Unit Price
+            </th>
+            <th class="col-xs-1 text-center">
+                Sales Tax Rate
+            </th>
+            <th class="col-xs-2 text-center">
+                Quantity Available
+            </th>
+            <th class="col-xs-2 text-center"> Actions </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${listProducts}">
+            <td th:text="${product.productName}"></td>
+            <td th:text="${product.unitPrice}"></td>
+            <td th:text="${product.salesTaxRate}"></td>
+            <td th:text="${product.quantityAvailable}"></td>
+            <td class="text-center">
+                <a th:href="@{/product/update/{id}(id=${product.id})}" class="btn btn-warning"> Update </a>
+                <a th:href="@{/product/delete/{id}(id=${product.id})}" class="btn btn-danger"> Delete </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
