@@ -1,5 +1,7 @@
 package ShoppingCart.WebApp.models;
 
+import org.springframework.data.relational.core.sql.In;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -18,7 +20,6 @@ public class CartItem implements Serializable {
     private Cart cart;
 
     private Integer itemQuantity;
-    private Double salesTaxRate;
     private Double subTotalWithoutTax;
     private Double subSalesTax;
     private Double subTotal;
@@ -27,9 +28,8 @@ public class CartItem implements Serializable {
 
     }
 
-    public CartItem(Integer itemQuantity, Double salesTaxRate, Double subTotalWithoutTax, Double subSalesTax, Double subTotal) {
+    public CartItem(Integer itemQuantity, Double subTotalWithoutTax, Double subSalesTax, Double subTotal) {
         this.itemQuantity = itemQuantity;
-        this.salesTaxRate = salesTaxRate;
         this.subTotalWithoutTax = subTotalWithoutTax;
         this.subSalesTax = subSalesTax;
         this.subTotal = subTotal;
@@ -63,10 +63,6 @@ public class CartItem implements Serializable {
         return cart;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setProduct(Product product) {
         this.product = product;
     }
@@ -91,12 +87,11 @@ public class CartItem implements Serializable {
         this.subTotal = subTotal;
     }
 
-    public Double getSalesTaxRate() {
-        return salesTaxRate;
-    }
-
-    public void setSalesTaxRate(Double salesTaxRate) {
-        this.salesTaxRate = salesTaxRate;
+    public void updateQuantityAndTotals(Integer itemQuantity, Double subTotalWithoutTax, Double subSalesTax, Double subTotal) {
+        this.itemQuantity = itemQuantity;
+        this.subTotalWithoutTax = subTotalWithoutTax;
+        this.subSalesTax = subSalesTax;
+        this.subTotal = subTotal;
     }
 
     @Override

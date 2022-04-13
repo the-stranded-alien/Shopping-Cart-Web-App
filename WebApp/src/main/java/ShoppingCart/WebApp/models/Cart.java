@@ -1,5 +1,7 @@
 package ShoppingCart.WebApp.models;
 
+import org.springframework.data.relational.core.sql.In;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -46,6 +48,14 @@ public class Cart implements Serializable {
         return cartItems;
     }
 
+    public Integer getThresholdQuantityForDiscount() {
+        return thresholdQuantityForDiscount;
+    }
+
+    public Double getDiscountRate() {
+        return discountRate;
+    }
+
     public Integer getNumberOfItemsInCart() {
         return numberOfItemsInCart;
     }
@@ -62,56 +72,21 @@ public class Cart implements Serializable {
         return cartTotal;
     }
 
-    public Integer getThresholdQuantityForDiscount() {
-        return thresholdQuantityForDiscount;
-    }
-
-    public Double getDiscountRate() {
-        return discountRate;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setCartItems(Set<CartItem> cartItems) {
-        this.cartItems = cartItems;
-    }
-
-    public void setNumberOfItemsInCart(Integer numberOfItemsInCart) {
-        this.numberOfItemsInCart = numberOfItemsInCart;
-    }
-
-    public void setCartTotalWithoutSalesTax(Double cartTotalWithoutSalesTax) {
-        this.cartTotalWithoutSalesTax = cartTotalWithoutSalesTax;
-    }
-
-    public void setCartTotalSalesTax(Double cartTotalSalesTax) {
-        this.cartTotalSalesTax = cartTotalSalesTax;
-    }
-
-    public void setCartTotal(Double cartTotal) {
-        this.cartTotal = cartTotal;
-    }
-
-    public void setThresholdQuantityForDiscount(Integer thresholdQuantityForDiscount) {
+    public void setDiscountDetails(Double discountRate, Integer thresholdQuantityForDiscount) {
+        this.discountRate = discountRate;
         this.thresholdQuantityForDiscount = thresholdQuantityForDiscount;
     }
 
-    public void setDiscountRate(Double discountRate) {
-        this.discountRate = discountRate;
+    public void updateCartTotals(Integer numberOfItemsInCart, Double cartTotalWithoutSalesTax, Double cartTotalSalesTax, Double cartTotal) {
+        this.numberOfItemsInCart = numberOfItemsInCart;
+        this.cartTotalWithoutSalesTax = cartTotalWithoutSalesTax;
+        this.cartTotalSalesTax = cartTotalSalesTax;
+        this.cartTotal = cartTotal;
     }
 
     public void addCartItem(CartItem cartItem) {
         this.cartItems.add(cartItem);
         cartItem.setCart(this);
-    }
-
-    public void addCartItems(Set<CartItem> cartItems) {
-        this.cartItems.addAll(cartItems);
-        for(CartItem cartItem : cartItems) {
-            cartItem.setCart(this);
-        }
     }
 
     @Override

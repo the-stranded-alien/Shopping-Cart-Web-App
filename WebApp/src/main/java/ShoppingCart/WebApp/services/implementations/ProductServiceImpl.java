@@ -30,10 +30,7 @@ public class ProductServiceImpl implements ProductService {
         Optional<Product> optional = this.productRepository.findById(product.getId());
         if(optional.isPresent()) {
             Product existingProduct = optional.get();
-            existingProduct.setProductName(product.getProductName());
-            existingProduct.setUnitPrice(product.getUnitPrice());
-            existingProduct.setSalesTaxRate(product.getSalesTaxRate());
-            existingProduct.setQuantityAvailable(product.getQuantityAvailable());
+            existingProduct.updateProductDetails(product.getProductName(), product.getUnitPrice(), product.getSalesTaxRate(), product.getQuantityAvailable());
             return this.productRepository.save(existingProduct);
         }
         throw new RuntimeException("Product Not Found !");

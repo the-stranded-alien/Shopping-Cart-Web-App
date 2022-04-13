@@ -49,10 +49,6 @@ public class Product implements Serializable {
         return quantityAvailable;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setProductName(String productName) {
         this.productName = productName;
     }
@@ -66,6 +62,13 @@ public class Product implements Serializable {
     }
 
     public void setQuantityAvailable(Integer quantityAvailable) {
+        this.quantityAvailable = quantityAvailable;
+    }
+
+    public void updateProductDetails(String productName, Double unitPrice, Double salesTaxRate, Integer quantityAvailable) {
+        this.productName = productName;
+        this.unitPrice = unitPrice;
+        this.salesTaxRate = salesTaxRate;
         this.quantityAvailable = quantityAvailable;
     }
 

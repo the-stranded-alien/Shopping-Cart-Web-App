@@ -21,8 +21,7 @@ public class CartServiceImpl implements CartService {
     public void generateCart() {
         if(!cartRepository.existsById(1L)) {
             Cart cart = new Cart();
-            cart.setDiscountRate(10.00D);
-            cart.setThresholdQuantityForDiscount(5);
+            cart.setDiscountDetails(10.0D, 5);
             this.cartRepository.save(cart);
         }
         return;
@@ -35,10 +34,7 @@ public class CartServiceImpl implements CartService {
             Cart cart = optionalCart.get();
             Set<CartItem> cartItems = cart.getCartItems();
             if(cartItems.isEmpty()) {
-                cart.setNumberOfItemsInCart(0);
-                cart.setCartTotalWithoutSalesTax(0.0D);
-                cart.setCartTotalSalesTax(0.0D);
-                cart.setCartTotal(0.0D);
+                cart.updateCartTotals(0, 0.0D, 0.0D, 0.0D);
             } else {
                 int itemCount = 0;
                 double totalWithoutSalesTax = 0.0;
@@ -53,13 +49,9 @@ public class CartServiceImpl implements CartService {
                 totalWithoutSalesTax = (double) Math.round(totalWithoutSalesTax * 100) / 100;
                 salesTax = (double) Math.round(salesTax * 100) / 100;
                 cartTotal = (double) Math.round(cartTotal * 100) / 100;
-                cart.setNumberOfItemsInCart(itemCount);
-                cart.setCartTotalWithoutSalesTax(totalWithoutSalesTax);
-                cart.setCartTotalSalesTax(salesTax);
-                cart.setCartTotal(cartTotal);
+                cart.updateCartTotals(itemCount, totalWithoutSalesTax, salesTax, cartTotal);
             }
-            cart.setThresholdQuantityForDiscount(5);
-            cart.setDiscountRate(10.0D);
+            cart.setDiscountDetails(10.00, 5);
             return cart;
         }
         return new Cart();
@@ -75,20 +67,16 @@ public class CartServiceImpl implements CartService {
         for(CartItem existingCartItem : itemsAlreadyPresent) {
             if(existingCartItem.getProduct().equals(productToAdd)) {
                 Integer newQuantity = existingCartItem.getItemQuantity() + cartItem.getItemQuantity();
-                existingCartItem.setItemQuantity(newQuantity);
-                existingCartItem.setSalesTaxRate(productToAdd.getSalesTaxRate());
                 double subSalesTaxVal = (double) Math.round((newQuantity * productToAdd.getUnitPrice() * (productToAdd.getSalesTaxRate() / 100)) * 100) / 100;
                 double subTotalWithoutTax = (double) Math.round((newQuantity * productToAdd.getUnitPrice()) * 100) / 100;
                 if(newQuantity >= thresholdQuantityForDiscount) {
                     double discountedAmount = subTotalWithoutTax - (subTotalWithoutTax * discountRate / 100);
                     double salesTaxAfterDiscount = (productToAdd.getSalesTaxRate() / 100) * discountedAmount;
-                    existingCartItem.setSubTotalWithoutTax((double) Math.round(discountedAmount * 100) / 100);
-                    existingCartItem.setSubSalesTax((double) Math.round(salesTaxAfterDiscount * 100) / 100);
-                    existingCartItem.setSubTotal((double) Math.round((discountedAmount + salesTaxAfterDiscount) * 100) / 100);
+                    double newSubTotal = (double) Math.round((discountedAmount + salesTaxAfterDiscount) * 100) / 100;
+                    existingCartItem.updateQuantityAndTotals(newQuantity, discountedAmount, salesTaxAfterDiscount, newSubTotal);
                 } else {
-                    existingCartItem.setSubSalesTax(subSalesTaxVal);
-                    existingCartItem.setSubTotalWithoutTax(subTotalWithoutTax);
-                    existingCartItem.setSubTotal((double) Math.round((subTotalWithoutTax + subSalesTaxVal) * 100) / 100);
+                    double newSubTotal = (double) Math.round((subTotalWithoutTax + subSalesTaxVal) * 100) / 100;
+                    existingCartItem.updateQuantityAndTotals(newQuantity, subTotalWithoutTax, subSalesTaxVal, newSubTotal);
                 }
                 this.cartRepository.save(cart);
                 return;
@@ -96,21 +84,17 @@ public class CartServiceImpl implements CartService {
         }
         CartItem newCartItem = new CartItem();
         newCartItem.setProduct(productToAdd);
-        newCartItem.setItemQuantity(cartItem.getItemQuantity());
-        newCartItem.setSubSalesTax(productToAdd.getSalesTaxRate());
         double subSalesTaxVal = (double) Math.round((cartItem.getItemQuantity() *
                 productToAdd.getUnitPrice() * (productToAdd.getSalesTaxRate() / 100)) * 100) / 100;
         double subTotalWithoutTax = (double) Math.round((cartItem.getItemQuantity() * productToAdd.getUnitPrice()) * 100) / 100;
         if(cartItem.getItemQuantity() >= thresholdQuantityForDiscount) {
             double discountedAmount = subTotalWithoutTax - (subTotalWithoutTax * discountRate / 100);
             double salesTaxAfterDiscount = (productToAdd.getSalesTaxRate() / 100) * discountedAmount;
-            newCartItem.setSubTotalWithoutTax((double) Math.round(discountedAmount * 100) / 100);
-            newCartItem.setSubSalesTax((double) Math.round(salesTaxAfterDiscount * 100) / 100);
-            newCartItem.setSubTotal((double) Math.round((discountedAmount + salesTaxAfterDiscount) * 100) / 100);
+            double subTotalAfterDiscount = (double) Math.round((discountedAmount + salesTaxAfterDiscount) * 100) / 100;
+            newCartItem.updateQuantityAndTotals(cartItem.getItemQuantity(), discountedAmount, salesTaxAfterDiscount, subTotalAfterDiscount);
         } else {
-            newCartItem.setSubSalesTax(subSalesTaxVal);
-            newCartItem.setSubTotalWithoutTax(subTotalWithoutTax);
-            newCartItem.setSubTotal((double) Math.round((subSalesTaxVal + subTotalWithoutTax) * 100) / 100);
+            double subTotal = (double) Math.round((subSalesTaxVal + subTotalWithoutTax) * 100) / 100;
+            newCartItem.updateQuantityAndTotals(cartItem.getItemQuantity(), subTotalWithoutTax, subSalesTaxVal, subTotal);
         }
         cart.addCartItem(newCartItem);
         this.cartRepository.save(cart);
