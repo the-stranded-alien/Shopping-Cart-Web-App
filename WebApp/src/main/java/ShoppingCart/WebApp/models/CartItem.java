@@ -18,6 +18,7 @@ public class CartItem implements Serializable {
     private Cart cart;
 
     private Integer itemQuantity;
+    private Double salesTaxRate;
     private Double subTotalWithoutTax;
     private Double subSalesTax;
     private Double subTotal;
@@ -26,8 +27,9 @@ public class CartItem implements Serializable {
 
     }
 
-    public CartItem(Integer itemQuantity, Double subTotalWithoutTax, Double subSalesTax, Double subTotal) {
+    public CartItem(Integer itemQuantity, Double salesTaxRate, Double subTotalWithoutTax, Double subSalesTax, Double subTotal) {
         this.itemQuantity = itemQuantity;
+        this.salesTaxRate = salesTaxRate;
         this.subTotalWithoutTax = subTotalWithoutTax;
         this.subSalesTax = subSalesTax;
         this.subTotal = subTotal;
@@ -51,6 +53,50 @@ public class CartItem implements Serializable {
 
     public Double getSubTotal() {
         return subTotal;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
+    public void setItemQuantity(Integer itemQuantity) {
+        this.itemQuantity = itemQuantity;
+    }
+
+    public void setSubTotalWithoutTax(Double subTotalWithoutTax) {
+        this.subTotalWithoutTax = subTotalWithoutTax;
+    }
+
+    public void setSubSalesTax(Double subSalesTax) {
+        this.subSalesTax = subSalesTax;
+    }
+
+    public void setSubTotal(Double subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public Double getSalesTaxRate() {
+        return salesTaxRate;
+    }
+
+    public void setSalesTaxRate(Double salesTaxRate) {
+        this.salesTaxRate = salesTaxRate;
     }
 
     @Override

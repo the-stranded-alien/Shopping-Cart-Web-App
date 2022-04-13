@@ -70,6 +70,50 @@ public class Cart implements Serializable {
         return discountRate;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setCartItems(Set<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
+
+    public void setNumberOfItemsInCart(Integer numberOfItemsInCart) {
+        this.numberOfItemsInCart = numberOfItemsInCart;
+    }
+
+    public void setCartTotalWithoutSalesTax(Double cartTotalWithoutSalesTax) {
+        this.cartTotalWithoutSalesTax = cartTotalWithoutSalesTax;
+    }
+
+    public void setCartTotalSalesTax(Double cartTotalSalesTax) {
+        this.cartTotalSalesTax = cartTotalSalesTax;
+    }
+
+    public void setCartTotal(Double cartTotal) {
+        this.cartTotal = cartTotal;
+    }
+
+    public void setThresholdQuantityForDiscount(Integer thresholdQuantityForDiscount) {
+        this.thresholdQuantityForDiscount = thresholdQuantityForDiscount;
+    }
+
+    public void setDiscountRate(Double discountRate) {
+        this.discountRate = discountRate;
+    }
+
+    public void addCartItem(CartItem cartItem) {
+        this.cartItems.add(cartItem);
+        cartItem.setCart(this);
+    }
+
+    public void addCartItems(Set<CartItem> cartItems) {
+        this.cartItems.addAll(cartItems);
+        for(CartItem cartItem : cartItems) {
+            cartItem.setCart(this);
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
