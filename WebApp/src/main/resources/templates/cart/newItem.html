@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="ISO-8859-1">
+    <title> Add Item in Cart </title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                <span class="sr-only">Toggle Navigation</span> <span
+                    class="icon-bar"></span> <span class="icon-bar"></span> <span
+                    class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" th:href="@{/}"> Add Item </a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{/}"> Home </a></li>
+                <li><a th:href="@{/product}"> Products </a></li>
+                <li><a th:href="@{/cart/1}"> My Cart </a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br><br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <br>
+            <div th:if="${param.success}">
+                <div class="alert alert-info"> You've Successfully Added an Item to your Cart ! </div>
+            </div>
+            <h1> Add a New Item to your Cart </h1>
+            <hr>
+            <form th:action="@{/cart/1/saveItem}" method="post" th:object="${cartItem}">
+                <div class="form-group">
+                    <label class="control-label" for="dropProduct"> Product </label>
+                    <select class="form-control"th:field="*{product}" id="dropProduct">
+                        <option value="0"> Select Product </option>
+                        <option th:each="pro : ${products}" th:value="${pro.id}" th:text="${pro.productName}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="itemQuantity"> Quantity </label>
+                    <input class="form-control" id="itemQuantity" type="number" th:field="*{itemQuantity}"
+                           required autofocus="autofocus">
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success"> Add Item </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
